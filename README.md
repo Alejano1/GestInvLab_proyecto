@@ -16,10 +16,10 @@ Este proyecto es desarrollado como el Proyecto de Título para optar al título 
 ## Características Principales
 
 * **Autenticación de Usuarios:** Login seguro para personal de laboratorio y administradores.
-* **Gestión de Stock en Tiempo Real:** Los módulos de Entrada y Salida actualizan el stock automáticamente (FR03).
+* **Gestión de Stock en Tiempo Real:** Los módulos de Entrada y Salida actualizan el stock automáticamente.
 * **Validación de Stock:** El sistema previene salidas de insumos si no hay stock disponible.
-* **Trazabilidad de Lotes:** Seguimiento de insumos por número de lote y fecha de caducidad (FR13).
-* **Módulo de Reportes:** Generación de informes de consumo por rango de fechas (FR05).
+* **Trazabilidad de Lotes:** Seguimiento de insumos por número de lote y fecha de caducidad.
+* **Módulo de Reportes:** Generación de informes de consumo por rango de fechas.
 * **Panel de Administración:** Interfaz de admin de Django para la gestión de usuarios e insumos.
 
 ---
@@ -38,7 +38,7 @@ Sigue estos pasos para levantar el proyecto en tu máquina local.
 
 1.  **Clonar el repositorio:**
     ```bash
-    git clone (https://github.com/Alejano1/GestInvLab_Proyecto_Final.git)
+    git clone (https://github.com/Alejano1/GestInvLab_Proyecto.git)
     cd GestInvLab_Proyecto_Final/GestInvLab_Backend
     ```
 
