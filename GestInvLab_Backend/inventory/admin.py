@@ -1,5 +1,4 @@
 from django.contrib import admin
-
 from .models import Servicio, Insumo, Lote, Movimiento, Detalle_Movimiento
 
 admin.site.register(Servicio)

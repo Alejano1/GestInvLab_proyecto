@@ -1,8 +1,7 @@
-# Archivo: inventory/serializers.py
-
 from rest_framework import serializers
 from .models import Insumo, Lote, Servicio, Movimiento, Detalle_Movimiento
 from django.contrib.auth.models import User
+
 
 # --- Serializadores para LECTURA (GET) ---
 
@@ -25,8 +24,6 @@ class LoteSerializer(serializers.ModelSerializer):
         fields = ['id', 'insumo', 'insumo_nombre', 'numero_lote', 'fecha_caducidad', 'stock_por_lote']
 
 # --- Serializadores para CREACIÓN (POST) ---
-# Estos son los más importantes para la lógica de negocio
-
 class DetalleMovimientoCreateSerializer(serializers.ModelSerializer):
     """
     Serializer para el detalle *dentro* de un movimiento.
@@ -69,7 +66,7 @@ class MovimientoCreateSerializer(serializers.ModelSerializer):
             if 'servicio_destino' not in validated_data or validated_data['servicio_destino'] is None:
                 raise serializers.ValidationError("Una 'Salida' debe tener un 'servicio_destino'.")
 
-            # --- ¡VALIDACIÓN DE STOCK! (Requisito clave) ---
+            # --- ¡VALIDACIÓN DE STOCK! ---
             for item in detalles_data:
                 lote = item['lote']
                 cantidad_solicitada = item['cantidad']
@@ -96,13 +93,7 @@ class MovimientoCreateSerializer(serializers.ModelSerializer):
 
         return movimiento
     
-# Archivo: inventory/serializers.py
-# (Añade esto al final del archivo)
-
-from django.contrib.auth.models import User
-# ... (las otras importaciones ya están)
-
-# --- Serializadores para REPORTES (Fase 4.3) ---
+# --- Serializadores para REPORTES  ---
 
 class ReporteDetalleMovimientoSerializer(serializers.ModelSerializer):
     """
@@ -141,5 +132,5 @@ class ReporteMovimientoSerializer(serializers.ModelSerializer):
             'usuario',
             'servicio_destino',
             'numero_documento',
-            'detalles' # <-- Aquí están los detalles anidados
+            'detalles' # 
         ]

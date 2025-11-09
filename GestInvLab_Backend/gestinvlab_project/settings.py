@@ -37,7 +37,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware'
+    'corsheaders.middleware.CorsMiddleware', 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -72,12 +72,12 @@ WSGI_APPLICATION = 'gestinvlab_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Usar MySQL
+        'ENGINE': 'django.db.backends.mysql', 
         'NAME': os.getenv('DB_NAME'),
         'USER': os.getenv('DB_USER'),
         'PASSWORD': os.getenv('DB_PASSWORD'),
         'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT', '3306'), # Usa 3306 si no lo encuentra
+        'PORT': os.getenv('DB_PORT', '3306'), 
     }
 }
 
@@ -123,14 +123,13 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# en gestinvlab_project/settings.py (al final)
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        # Asegúrate de que la autenticación por Token esté primero
+        # Autenticación por Token
         'rest_framework.authentication.TokenAuthentication',
 
-        # También mantenemos la autenticación de sesión (para el panel admin)
+        # Autenticación de sesión 
         'rest_framework.authentication.SessionAuthentication', 
     ],
 
@@ -138,7 +137,7 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",    # Si usas React (puerto 3000 por defecto)
-    "http://localhost:5173",    # Si usas Vite (React/Vue)
-    "http://127.0.0.1:5500",  # Si usas Live Server en VS Code (HTML/JS simple)
+    "http://localhost:3000",    # React 
+    "http://localhost:5173",    # React/Vue
+    "http://127.0.0.1:5500",  # Live Server en VS Code (HTML/JS simple)
 ]

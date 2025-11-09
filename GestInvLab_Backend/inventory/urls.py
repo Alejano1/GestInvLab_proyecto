@@ -1,9 +1,6 @@
-# Archivo: inventory/urls.py
-
 from django.urls import path
 from . import views
 
-# Este 'app_name' ayuda a Django a organizar las URLs
 app_name = 'inventory'
 
 urlpatterns = [
@@ -14,10 +11,7 @@ urlpatterns = [
 
     # --- Endpoints de ESCRITURA (POST) ---
     path('movimientos/', views.MovimientoCreateView.as_view(), name='movimiento-create'),
-    # ... (otras rutas)
     path('movimientos/', views.MovimientoCreateView.as_view(), name='movimiento-create'),
-
-    # --- AÑADE ESTA LÍNEA ---
     path('reportes/movimientos/', views.ReporteMovimientosView.as_view(), name='reporte-movimientos'),
 ]
 

@@ -1,28 +1,18 @@
-# Archivo: .gitignore
-
-# --- ¡¡SEGURIDAD!! ---
-# Ignorar el archivo de variables de entorno (Contraseñas de la BD)
 .env
 GestInvLab_Backend/.env
 
-# --- Python / Django ---
-# Entornos virtuales
 venv/
 GestInvLab_Backend/venv/
 
-# Archivos compilados y caches
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 
-# Archivos de la base de datos local (si usaras sqlite)
 *.sqlite3
 db.sqlite3
 
-# --- macOS / Windows ---
 .DS_Store
 Thumbs.db
 
-# --- VS Code ---
 .vscode/

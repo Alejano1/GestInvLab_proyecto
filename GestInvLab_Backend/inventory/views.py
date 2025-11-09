@@ -1,19 +1,15 @@
-# Archivo: inventory/views.py
 from django.utils.dateparse import parse_date 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-# Archivo: inventory/views.py (al principio)
-
-# ... (las otras importaciones)
-
-from .models import Insumo, Servicio, Lote
+from .models import Insumo, Servicio, Lote, Movimiento
 from .serializers import (
     InsumoSerializer, 
     ServicioSerializer, 
     LoteSerializer, 
-    MovimientoCreateSerializer
+    MovimientoCreateSerializer,
+    ReporteMovimientoSerializer
 )
 
 # =============================================
@@ -23,7 +19,6 @@ from .serializers import (
 class MovimientoCreateView(APIView):
     """
     Crea un nuevo movimiento (Entrada o Salida) con sus detalles.
-    Este es el endpoint principal para la lógica de negocio.
     """
     # Protegemos el endpoint: Solo usuarios autenticados pueden crear movimientos
     permission_classes = [IsAuthenticated]
@@ -93,24 +88,14 @@ class LoteListView(APIView):
         serializer = LoteSerializer(lotes, many=True)
         return Response(serializer.data)
 
-# Archivo: inventory/views.py (al final)
-
-from .serializers import (
-    # ... (otros serializers)
-    ReporteMovimientoSerializer # <-- Asegúrate de importar esto
-)
-from .models import Movimiento # <-- Y esto
-
-# ... (las otras vistas)
-
 # =============================================
 # Vista para Reporte de Movimientos (Fase 4.3)
 # Endpoint: GET /api/inventory/reportes/movimientos/
 # =============================================
 class ReporteMovimientosView(APIView):
     """
-    Genera un informe de movimientos (FR05)
-    con filtros personalizables (FR04).
+    Genera un informe de movimientos
+    con filtros personalizables.
 
     Filtros disponibles (Query Params):
     - fecha_inicio (YYYY-MM-DD)
@@ -127,7 +112,7 @@ class ReporteMovimientosView(APIView):
             'detalles__lote__insumo', 
             'usuario', 
             'servicio_destino'
-        ).order_by('-fecha_registro') # Más recientes primero
+        ).order_by('-fecha_registro')
 
         # 2. Aplicar filtros de la URL (Query Params)
         fecha_inicio = request.query_params.get('fecha_inicio', None)

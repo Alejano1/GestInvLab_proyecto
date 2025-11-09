@@ -1,5 +1,3 @@
-# Archivo: inventory/signals.py
-
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db.models import F
@@ -15,8 +13,6 @@ def update_stock_on_save(sender, instance, created, **kwargs):
 
     # 'created' es True solo la primera vez que se guarda
     if not created:
-        # Si solo se está editando un detalle (no es lo común), no hacemos nada por ahora
-        # Se podría añadir lógica de re-cálculo aquí, pero es más complejo
         return
 
     detalle = instance
@@ -36,5 +32,4 @@ def update_stock_on_save(sender, instance, created, **kwargs):
         Lote.objects.filter(id=lote.id).update(stock_por_lote=F('stock_por_lote') - cantidad)
         Insumo.objects.filter(id=insumo.id).update(stock_actual=F('stock_actual') - cantidad)
 
-    # Nota: Usamos F() para evitar "race conditions" (condiciones de carrera)
     # Le decimos a la BD que haga la operación matemática ella misma.
