@@ -14,8 +14,7 @@ class Servicio(models.Model):
 
 class Insumo(models.Model):
     nombre = models.CharField(max_length=255, verbose_name="Nombre del Insumo")
-    codigo_producto = models.CharField(max_length=100, unique=True, blank=True, null=True, verbose_name="Código de Producto")
-    stock_actual = models.IntegerField(default=0, editable=False, verbose_name="Stock Total")
+    codigo_producto = models.CharField(max_length=100, unique=True, verbose_name="Código de Producto")
     umbral_critico = models.IntegerField(default=0, verbose_name="Umbral de Stock Crítico")
 
     def __str__(self):
@@ -27,7 +26,6 @@ class Insumo(models.Model):
 
 
 class Lote(models.Model):
-    # Un Insumo tiene muchos Lotes
     insumo = models.ForeignKey(Insumo, on_delete=models.CASCADE, related_name="lotes")
     numero_lote = models.CharField(max_length=100, verbose_name="Número de Lote")
     fecha_caducidad = models.DateField(blank=True, null=True, verbose_name="Fecha de Caducidad")
@@ -57,7 +55,7 @@ class Movimiento(models.Model):
     
     # A dónde va el insumo (si es Salida)
     servicio_destino = models.ForeignKey(Servicio, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Servicio Destino")
-    numero_documento = models.CharField(max_length=100, blank=True, null=True, verbose_name="Número de Documento") # Ej. ENT-2024-00123
+    numero_documento = models.CharField(max_length=100, blank=True, null=True, unique=True, verbose_name="Número de Documento") # Ej. ENT-2024-00123
 
     def __str__(self):
         return f"{self.get_tipo_movimiento_display()} - {self.fecha_registro.strftime('%Y-%m-%d')}"

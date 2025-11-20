@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GestInvLab - Aplicación</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        body { padding-top: 56px; } 
+        /* Estilo para los toggles de admin */
+        .form-switch .form-check-input {
+            cursor: pointer;
+            width: 3.5em;
+            height: 1.75em;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#"><i class="bi bi-box-seam"></i> GestInvLab</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="main-nav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" id="nav-stock"><i class="bi bi-clipboard-data"></i> Stock</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="nav-entrada"><i class="bi bi-box-arrow-in-down"></i> Entrada</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="nav-salida"><i class="bi bi-box-arrow-up"></i> Salida</a>
+                    </li>
+                    <li class="nav-item" id="nav-reportes-link">
+                        <a class="nav-link" href="#" id="nav-reportes"><i class="bi bi-file-earmark-bar-graph"></i> Reportes</a>
+                    </li>
+                    <li class="nav-item d-none" id="nav-admin-link">
+                        <a class="nav-link" href="#" id="nav-administrar"><i class="bi bi-gear-fill"></i> Administrar</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> <span id="user-name-display">Usuario</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" id="logout-button">Cerrar Sesión</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container-fluid mt-4">
+        
+        <div id="app-content">
+
+            <!-- MÓDULO DE STOCK (Visible por defecto) -->
+            <div id="stock-module">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="h4">Inventario Actual</h2>
+                    <button class="btn btn-outline-secondary" id="refresh-stock-btn">
+                        <i class="bi bi-arrow-clockwise"></i> Refrescar
+                    </button>
+                </div>
+                <div class="mb-3">
+                    <input type="text" class="form-control" id="stock-search" placeholder="Q Buscar por nombre del producto...">
+                </div>
+                <div class="card shadow-sm">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col">NOMBRE DE INSUMO</th>
+                                    <th scope="col">CÓDIGO</th>
+                                    <th scope="col">STOCK TOTAL</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="stock-table-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MÓDULO DE ENTRADA  -->
+            <div id="entrada-module" class="d-none">
+                <!-- ... (Código del Módulo de Entrada) ... -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="h4">Módulo de Entrada</h2>
+                </div>
+                <div class="mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-header"><h5 class="mb-0">1. Añadir insumo</h5></div>
+                        <div class="card-body">
+                            <form id="entrada-add-item-form">
+                                <div class="mb-3">
+                                    <label for="entrada-insumo-select" class="form-label">Insumo</label>
+                                    <select class="form-select" id="entrada-insumo-select" required>
+                                        <option value="">Cargando insumos...</option>
+                                    </select>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="entrada-lote" class="form-label">N° de Lote</label>
+                                        <input type="text" class="form-control" id="entrada-lote" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="entrada-caducidad" class="form-label">Caducidad</label>
+                                        <input type="date" class="form-control" id="entrada-caducidad">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="entrada-cantidad" class="form-label">Cantidad</label>
+                                    <input type="number" min="1" class="form-control" id="entrada-cantidad" required>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary" id="entrada-add-item-btn">
+                                        <i class="bi bi-plus-lg"></i> Añadir al detalle
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="card shadow-sm">
+                        <div class="card-header"><h5 class="mb-0">2. Detalle de Entrada</h5></div>
+                        <div class="card-body">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted">Fecha de Entrada</label>
+                                    <input type="text" class="form-control" id="entrada-fecha-display" readonly>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted">N° Documento</label>
+                                    <input type="text" class="form-control" id="entrada-doc-display" value="Se generará al guardar" readonly>
+                                </div>
+                            </div>
+                            <div class="table-responsive" style="min-height: 200px;">
+                                <table class="table table-sm">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Insumo</th>
+                                            <th>Lote</th>
+                                            <th>Cantidad</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="entrada-table-body">
+                                        <tr id="entrada-empty-row">
+                                            <td colspan="4" class="text-center text-muted p-4">
+                                                Añade insumos desde el formulario.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="d-grid mt-3">
+                                <button class="btn btn-success btn-lg" id="registrar-entrada-btn" disabled>
+                                    <i class="bi bi-check-lg"></i> Registrar Entrada
+                                </button>
+                            </div>
+                            <div id="entrada-alert" class="alert mt-3 d-none"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- MÓDULO DE SALIDA -->
+            <div id="salida-module" class="d-none">
+                <!-- ... (Código del Módulo de Salida) ... -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="h4">Módulo de Salida</h2>
+                </div>
+                <div class="mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-header"><h5 class="mb-0">1. Añadir insumo a despachar</h5></div>
+                        <div class="card-body">
+                            <form id="salida-add-item-form">
+                                <div class="mb-3">
+                                    <label for="salida-servicio-select" class="form-label fw-bold">Unidad/Servicio (Destino)</label>
+                                    <select class="form-select" id="salida-servicio-select" required>
+                                        <option value="">Cargando servicios...</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="salida-insumo-select" class="form-label">Insumo</label>
+                                    <select class="form-select" id="salida-insumo-select" required>
+                                        <option value="">Seleccione un servicio primero</option>
+                                    </select>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-md-7 mb-3">
+                                        <label for="salida-lote-select" class="form-label">Lote Disponible (Stock / Caducidad)</label>
+                                        <select class="form-select" id="salida-lote-select" required disabled>
+                                            <option value="">Seleccione un insumo primero</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-5 mb-3">
+                                        <label for="salida-cantidad" class="form-label">Cantidad a despachar</label>
+                                        <input type="number" min="1" class="form-control" id="salida-cantidad" required disabled>
+                                    </div>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary" id="salida-add-item-btn">
+                                        <i class="bi bi-plus-lg"></i> Añadir al detalle
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="card shadow-sm">
+                        <div class="card-header"><h5 class="mb-0">2. Detalle de Salida</h5></div>
+                        <div class="card-body">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-4">
+                                    <label class="form-label text-muted">Servicio Destino</label>
+                                    <input type="text" class="form-control" id="salida-servicio-display" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label text-muted">Fecha de Salida</label>
+                                    <input type="text" class="form-control" id="salida-fecha-display" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label text-muted">N° Documento</label>
+                                    <input type="text" class="form-control" id="salida-doc-display" value="Se generará al guardar" readonly>
+                                </div>
+                            </div>
+                            <div class="table-responsive" style="min-height: 200px;">
+                                <table class="table table-sm">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Servicio</th>
+                                            <th>Insumo</th>
+                                            <th>Lote</th>
+                                            <th>Cantidad</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="salida-table-body">
+                                        <tr id="salida-empty-row">
+                                            <td colspan="5" class="text-center text-muted p-4">
+                                                Añade insumos desde el formulario.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="d-grid mt-3">
+                                <button class="btn btn-success btn-lg" id="registrar-salida-btn" disabled>
+                                    <i class="bi bi-check-lg"></i> Registrar Salida
+                                </button>
+                            </div>
+                            <div id="salida-alert" class="alert mt-3 d-none"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MÓDULO DE REPORTES -->
+            <div id="reportes-module" class="d-none">
+                <!-- ... (Código del Módulo de Reportes) ... -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="h4">Generación de Reportes</h2>
+                </div>
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header"><h5 class="mb-0">Filtros del Reporte</h5></div>
+                    <div class="card-body">
+                        <form id="report-form">
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <label for="report-tipo" class="form-label">Tipo de Movimiento</label>
+                                    <select id="report-tipo" class="form-select">
+                                        <option value="">Todos</option>
+                                        <option value="Entrada">Entrada</option>
+                                        <option value="Salida">Salida</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="report-insumo" class="form-label">Insumo</label>
+                                    <select id="report-insumo" class="form-select">
+                                        <option value="">Todos</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="report-servicio" class="form-label">Servicio (Destino)</label>
+                                    <select id="report-servicio" class="form-select">
+                                        <option value="">Todos</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="report-usuario" class="form-label">Registrado por</label>
+                                    <select id="report-usuario" class="form-select">
+                                        <option value="">Todos</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="report-fecha-inicio" class="form-label">Fecha Inicio</label>
+                                    <input type="date" class="form-control" id="report-fecha-inicio">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="report-fecha-fin" class="form-label">Fecha Fin</label>
+                                    <input type="date" class="form-control" id="report-fecha-fin">
+                                </div>
+                                <div class="col-md-6 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-primary me-2">
+                                        <i class="bi bi-funnel-fill"></i> Generar Reporte
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" id="report-clear-btn">Limpiar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="card shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Resultados del Reporte</h5>
+                        <button class="btn btn-sm btn-success" id="report-download-csv-btn">
+                            <i class="bi bi-file-earmark-spreadsheet"></i> Exportar a CSV
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-striped">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Documento</th>
+                                        <th>Tipo</th>
+                                        <th>Insumo</th>
+                                        <th>Lote</th>
+                                        <th>Cantidad</th>
+                                        <th>Destino</th>
+                                        <th>Usuario</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="report-table-body">
+                                    <tr>
+                                        <td colspan="8" class="text-center text-muted p-4">
+                                            Seleccione los filtros y genere un reporte.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Módulo de Administración -->
+            <div id="administrar-module" class="d-none">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="h4">Panel de Administración</h2>
+                </div>
+
+                <div class="row g-4">
+                    <!-- Tarjeta 1: Administrar Insumos -->
+                    <div class="col-lg-6">
+                        <div class="card shadow-sm">
+                            <div class="card-header"><h5 class="mb-0">Administrar Insumos (FR08)</h5></div>
+                            <div class="card-body">
+                                <h6 class="text-muted">Crear Nuevo Insumo</h6>
+                                <form id="admin-create-insumo-form">
+                                    <div class="mb-3">
+                                        <label for="admin-insumo-nombre" class="form-label">Nombre del Insumo</label>
+                                        <input type="text" class="form-control" id="admin-insumo-nombre" required>
+                                    </div>
+                                    <div class="row g-2">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="admin-insumo-codigo" class="form-label">Código</label>
+                                            <input type="text" class="form-control" id="admin-insumo-codigo" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="admin-insumo-umbral" class="form-label">Umbral Crítico</label>
+                                            <input type="number" min="0" class="form-control" id="admin-insumo-umbral" value="0" required>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Crear Insumo</button>
+                                    <div id="admin-insumo-alert" class="alert mt-3 d-none"></div>
+                                </form>
+                                <hr>
+                                <h6 class="text-muted">Insumos Existentes</h6>
+                                <div class="table-responsive" style="max-height: 300px;">
+                                    <table class="table table-sm table-striped">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>Código</th>
+                                                <th style="width: 120px;">Umbral Crítico</th>
+                                                <th style="width: 100px;">Acción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="admin-insumos-table">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tarjeta 2: Administrar Servicios -->
+                    <div class="col-lg-6">
+                        <div class="card shadow-sm">
+                            <div class="card-header"><h5 class="mb-0">Administrar Servicios (FR09)</h5></div>
+                            <div class="card-body">
+                                <h6 class="text-muted">Crear Nuevo Servicio</h6>
+                                <form id="admin-create-servicio-form">
+                                    <div class="mb-3">
+                                        <label for="admin-servicio-nombre" class="form-label">Nombre del Servicio</label>
+                                        <input type="text" class="form-control" id="admin-servicio-nombre" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Crear Servicio</button>
+                                    <div id="admin-servicio-alert" class="alert mt-3 d-none"></div>
+                                </form>
+                                <hr>
+                                <h6 class="text-muted">Servicios Existentes</h6>
+                                <div class="table-responsive" style="max-height: 300px;">
+                                    <table class="table table-sm table-striped">
+                                        <tbody id="admin-servicios-table">
+                                            <!-- Se rellena con JS -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Administrar Usuarios -->
+                <div class="row g-4 mt-2">
+                    <div class="col-12">
+                        <div class="card shadow-sm">
+                            <div class="card-header"><h5 class="mb-0">Administrar Usuarios (FR10)</h5></div>
+                            <div class="card-body">
+                                <div class="row g-4">
+                                    <!-- Formulario de Crear Usuario -->
+                                    <div class="col-lg-4">
+                                        <h6 class="text-muted">Crear Nuevo Usuario</h6>
+                                        <form id="admin-create-user-form">
+                                            <div class="mb-3">
+                                                <label for="admin-user-username" class="form-label">Nombre de Usuario</label>
+                                                <input type="text" class="form-control" id="admin-user-username" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="admin-user-password" class="form-label">Contraseña</label>
+                                                <input type="password" class="form-control" id="admin-user-password" required>
+                                            </div>
+                                            <div class="mb-3 form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" role="switch" id="admin-user-isstaff">
+                                                <label class="form-check-label" for="admin-user-isstaff">Es Administrador (Rol)</label>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Crear Usuario</button>
+                                            <div id="admin-user-alert" class="alert mt-3 d-none"></div>
+                                        </form>
+                                    </div>
+                                    <!-- Tabla de Usuarios Existentes -->
+                                    <div class="col-lg-8">
+                                        <h6 class="text-muted">Usuarios Existentes</h6>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-striped align-middle">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>Usuario</th>
+                                                        <th>Rol (Admin)</th>
+                                                        <th>Estado (Activo)</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="admin-usuarios-table">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- Fin de #administrar-module -->
+            
+        </div>
+    </main>
+
+    <!-- 1. Bootstrap JS (y Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- 2. Nuestro app.js -->
+    <script src="app.js"></script>
+</body>
+</html>
